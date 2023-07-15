@@ -3,6 +3,7 @@ package main
 import (
 	"log"
 	"net/http"
+	"os"
 	"tailzprotocol/routes"
 )
 
@@ -17,7 +18,15 @@ func main() {
 	mux.HandleFunc("/", home)
 	mux.HandleFunc("/api/auth", routes.AuthHandler)
 
-	log.Println("Starting server on :4000")
-	err := http.ListenAndServe(":4000", mux)
-	log.Fatal(err)
+
+	PORT, exists := os.LookupEnv("PORT")
+	
+	if exists {
+		log.Printf("Starting server on port %s \n", PORT)
+		err := http.ListenAndServe(":"+PORT, mux)
+		log.Fatal(err)
+	} else {
+		log.Fatal("PORT environment variable not set")
+	}
+
 }
