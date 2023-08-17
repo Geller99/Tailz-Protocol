@@ -14,7 +14,32 @@ CLI Commands
 
  migrate -path ./migrations -database "postgresql://root:root@localhost:5432/testdb?sslmode=disable" -verbose up
 
- ![Alt text](image.png)
 
 
 Note -> Down migration to drop tables in the exact reverse of the order they were created
+
+
+## Generate SQLC CRUD Code with Docker Image
+
+
+## FUDocker commands
+docker build -t sqlc-generator .
+
+docker run -it --entrypoint /bin/bash sqlc-generator
+docker run --rm -v /c/Users/Geller/Desktop/Tailz-Protocol/apps/crater:/crater sqlc-generator
+
+docker system prune -a
+
+## Improve Queries for proper SQLc generation 
+
+Edited cardinality and function names
+
+
+
+## Setup main_test.go and custom tests for CRUD code
+
+- define global query object for testing db connections and transactions
+
+- setup lib pq driver for postgres
+
+- setup base test against docker db instance

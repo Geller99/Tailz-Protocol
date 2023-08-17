@@ -1,16 +1,18 @@
--- Get all wagz
+-- name: GetAllWags :many
 SELECT * FROM "Wagz";
 
--- Get wag by ID
+-- name: GetWagById :one
 SELECT * FROM "Wagz" WHERE "wag_id" = $1;
 
--- Get wagz by user ID
+-- name: GetWagzByUserId :many
 SELECT * FROM "Wagz" WHERE "user_id" = $1;
 
--- Update wag information
+-- name: UpdateWagInfo :one
 UPDATE "Wagz"
 SET "content" = $2
-WHERE "wag_id" = $1;
+WHERE "wag_id" = $1
+RETURNING *;
 
--- Delete wag by ID
-DELETE FROM "Wagz" WHERE "wag_id" = $1;
+-- name: DeleteWagById :one
+DELETE FROM "Wagz" WHERE "wag_id" = $1
+RETURNING *;

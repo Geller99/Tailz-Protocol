@@ -8,7 +8,7 @@ WORKDIR /crater
 COPY . .
 
 # Install sqlc and PostgreSQL client
-RUN go install github.com/sqlc-dev/sqlc
+RUN go install github.com/sqlc-dev/sqlc/cmd/sqlc@latest
 RUN apt-get update && apt-get install -y postgresql-client
 
 # Run sqlc generate command
@@ -17,3 +17,4 @@ CMD ["sqlc", "generate"]
 
 # List contents of /crater directory during image build
 RUN ls /crater
+

@@ -1,19 +1,20 @@
--- Insert a new rewag
+-- name: CreateReWag :one
 INSERT INTO "ReWagz" ("user_id", "owner_wag_id")
 VALUES ($1, $2)
 RETURNING "rewagz_id";
 
--- Get all rewagz
+-- name: GetAllReWagz :many
 SELECT * FROM "ReWagz";
 
--- Get rewag by ID
+-- name: GetReWagById :one
 SELECT * FROM "ReWagz" WHERE "rewagz_id" = $1;
 
--- Get rewagz by user ID
+-- name: GetReWagzByUserId :many
 SELECT * FROM "ReWagz" WHERE "user_id" = $1;
 
--- Get rewagz by owner_wag_id
+-- name: GetReWagzByOwnerWagId :many
 SELECT * FROM "ReWagz" WHERE "owner_wag_id" = $1;
 
--- Delete rewag by ID
-DELETE FROM "ReWagz" WHERE "rewagz_id" = $1;
+-- name: DeleteReWagById :one
+DELETE FROM "ReWagz" WHERE "rewagz_id" = $1
+RETURNING *;

@@ -1,24 +1,26 @@
--- Insert a new direct message
+-- name: CreateDirectMessage :one
 INSERT INTO "DirectMessages" ("sender_id", "recipient_id", "content") 
 VALUES ($1, $2, $3)
 RETURNING "message_id";
 
--- Get all direct messages
+-- name: GetAllDirectMessages :many
 SELECT * FROM "DirectMessages";
 
--- Get direct message by ID
+-- name: GetDirectMessageById :one
 SELECT * FROM "DirectMessages" WHERE "message_id" = $1;
 
--- Get direct messages sent by a user
+-- name: GetDirectMessagesBySenderId :many
 SELECT * FROM "DirectMessages" WHERE "sender_id" = $1;
 
--- Get direct messages received by a user
+-- name: GetDirectMessagesByRecipientId :many
 SELECT * FROM "DirectMessages" WHERE "recipient_id" = $1;
 
--- Update direct message information
+-- name: UpdateDirectMessageInfo :one
 UPDATE "DirectMessages"
 SET "content" = $2, "is_read" = $3
-WHERE "message_id" = $1;
+WHERE "message_id" = $1
+RETURNING *;
 
--- Delete direct message by ID
-DELETE FROM "DirectMessages" WHERE "message_id" = $1;
+-- name: DeleteDirectMessageById :one
+DELETE FROM "DirectMessages" WHERE "message_id" = $1
+RETURNING *;
