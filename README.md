@@ -39,7 +39,8 @@ TypeScript,
 React-query,
 Zustand,
 Tailwind,
-GraphQL
+GraphQL,
+
 
 ```
 
@@ -47,10 +48,11 @@ Backend →
 ```
 Golang,
 Postgres,
-TypeScript
+TypeScript,
+TablePlus,
+Docker,
+AWS
 ```
-
-Cloud → AWS
 
 
 ## Implementation Map x Requirements Phase

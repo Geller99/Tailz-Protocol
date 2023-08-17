@@ -1,0 +1,57 @@
+version: "3.8"
+services:
+  backend-crater:
+    environment:
+      FRONTEND_URL: "http://localhost:3000/"
+      BACKEND_URL: "http://localhost:5000/"
+    build: ./backend-crater
+    ports:
+      - "5000:5000"
+    volumes:
+      - ./apps/crater:/backend-crater
+  frontend-tailz:
+    environment:
+      REACT_APP_AWS_PROJECT_REGION: "${AWS_DEFAULT_REGION}"
+      REACT_APP_AWS_COGNITO_REGION: "${AWS_DEFAULT_REGION}"
+      REACT_APP_AWS_USER_POOLS_ID: ""
+      REACT_APP_CLIENT_ID: ""
+      REACT_APP_BACKEND_URL: "http://localhost:5000/"
+    build: ./frontend-tailz
+    ports:
+      - "3000:3000"
+    volumes:
+      - ./apps/tailz:/frontend-tailz
+
+  db:
+    image: postgres:13-alpine
+    restart: always
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=password
+    ports:
+      - "5432:5432"
+    volumes:
+      - db:/var/lib/postgresql/data
+  dynamodb-local:
+    # https://stackoverflow.com/questions/67533058/persist-local-dynamodb-data-in-volumes-lack-permission-unable-to-open-databa
+    # We needed to add user:root to get this working.
+    user: root
+    command: "-jar DynamoDBLocal.jar -sharedDb -dbPath ./data"
+    image: "amazon/dynamodb-local:latest"
+    container_name: dynamodb-local
+    ports:
+      - "8000:8000"
+    volumes:
+      - "./docker/dynamodb:/home/dynamodblocal/data"
+    working_dir: /home/dynamodblocal
+
+# the name flag is a hack to change the default prepend folder
+# name when outputting the image names
+networks:
+  internal-network:
+    driver: bridge
+    name: tailz
+
+volumes:
+  db:
+    driver: local
