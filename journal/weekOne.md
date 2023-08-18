@@ -43,3 +43,12 @@ Edited cardinality and function names
 - setup lib pq driver for postgres
 
 - setup base test against docker db instance
+
+
+
+## Tailz ->
+
+- Setup aws amplify with Next
+- Setup multi step form for signup
+- need to define global types
+- need to fix module trace error with Amplify SDK
