@@ -1,13 +1,24 @@
-import { TailzGlobalType } from "../../../../types/global";
+"use client";
+import React from "react";
 import PersonalInfoStep from "../personal/personal";
 import Preferences from "../preferences/preferences";
+import { UserProps } from "../../page";
+import useFormStore from "../../services/formStore";
 
 interface SignupProps {
-  userData: any;
-  setUserData: React.Dispatch<React.SetStateAction<any>>;
+  userData: UserProps;
+  setUserData: React.Dispatch<React.SetStateAction<UserProps>>;
   step: number;
   setStep: React.Dispatch<React.SetStateAction<number>>;
-  onSubmit: any
+  onSubmit: any;
+}
+
+export interface FormErrorProps {
+  usernameErrors: string;
+  passwordErrors: string;
+  dobErrors: string;
+  emailErrors: string;
+  analyticsConsentErrors?: any;
 }
 
 const SignupForm: React.FC<SignupProps> = ({
@@ -15,8 +26,9 @@ const SignupForm: React.FC<SignupProps> = ({
   setUserData,
   step,
   setStep,
-  onSubmit
+  onSubmit,
 }) => {
+  const formErrors = useFormStore((state) => state.formErrors);
 
   const nextStep = () => {
     setStep(step + 1);
@@ -27,10 +39,25 @@ const SignupForm: React.FC<SignupProps> = ({
   };
 
   const handleChange = (field: string, value: any) => {
-    setUserData((prevData: TailzGlobalType) => ({
+    console.log(`Field: ${field}, Value: ${value}`);
+    setUserData((prevData: UserProps) => ({
       ...prevData,
       [field]: value,
     }));
+  };
+
+  const validateFormSubmit = (e: any) => {
+    e.preventDefault();
+    // check for form errors and prevent form submit
+    if (
+      formErrors.usernameErrors ||
+      formErrors.dobErrors ||
+      formErrors.passwordErrors ||
+      formErrors.emailErrors
+    ) {
+      alert("Fix form errors");
+      return;
+    } else return onSubmit(e);
   };
 
   const renderStep = () => {
@@ -39,35 +66,37 @@ const SignupForm: React.FC<SignupProps> = ({
         return (
           <PersonalInfoStep
             userData={userData}
-            onChange={() => {}}
+            handleChange={handleChange}
             nextStep={nextStep}
             prevStep={prevStep}
+            step={step}
           />
         );
       case 2:
         return (
           <Preferences
             userData={userData}
-            onChange={() => {}}
+            handleChange={handleChange}
             nextStep={nextStep}
             prevStep={prevStep}
           />
         );
-        // case 3:
-        //     return (
-        //       <FinalStep
-        //         userData={userData}
-        //         onChange={() => {}}
-        //         onSubmit={() => {}}
-        //       />
-        //     );
-      // Add more cases for additional steps if needed
+      case 3:
+        return (
+          <PersonalInfoStep
+            userData={userData}
+            handleChange={handleChange}
+            nextStep={nextStep}
+            prevStep={prevStep}
+            step={step}
+          />
+        );
       default:
         return null;
     }
   };
 
-  return <form>{renderStep()}</form>;
+  return <form onSubmit={validateFormSubmit}>{renderStep()}</form>;
 };
 
 export default SignupForm;

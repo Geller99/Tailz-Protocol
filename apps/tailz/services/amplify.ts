@@ -18,3 +18,20 @@ const amplifyConfig = {
 Amplify.configure(amplifyConfig);
 
 export default amplifyConfig;
+
+
+// {
+//   "UserPoolClient": {
+//       "UserPoolId": "us-east-1_kvPzTDvWb",
+//       "ClientName": "TailzClient",
+//       "ClientId": "4bgd5r70a8gtfe4d5d2us1gs6r",
+//       "LastModifiedDate": "2023-08-30T21:51:35.978000-06:00",
+//       "CreationDate": "2023-08-30T21:51:35.978000-06:00",
+//       "RefreshTokenValidity": 30,
+//       "TokenValidityUnits": {},
+//       "AllowedOAuthFlowsUserPoolClient": false,
+//       "EnableTokenRevocation": true,
+//       "EnablePropagateAdditionalUserContextData": false,
+//       "AuthSessionValidity": 3
+//   }
+// }

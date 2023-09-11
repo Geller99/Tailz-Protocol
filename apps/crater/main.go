@@ -28,11 +28,8 @@ func main() {
 	// routes
 	mux.HandleFunc("/", home)
 	mux.HandleFunc("/api/auth", routes.AuthHandler)
-
 	
-
 	PORT, exists := os.LookupEnv("PORT")
-
 	if exists {
 		log.Printf("Starting server on port %s \n", PORT)
 		err := http.ListenAndServe(":"+PORT, mux)

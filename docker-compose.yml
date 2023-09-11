@@ -13,8 +13,8 @@ services:
     environment:
       REACT_APP_AWS_PROJECT_REGION: "${AWS_DEFAULT_REGION}"
       REACT_APP_AWS_COGNITO_REGION: "${AWS_DEFAULT_REGION}"
-      REACT_APP_AWS_USER_POOLS_ID: ""
-      REACT_APP_CLIENT_ID: ""
+      REACT_APP_AWS_USER_POOLS_ID: "us-east-1_kvPzTDvWb"
+      REACT_APP_CLIENT_ID: "4bgd5r70a8gtfe4d5d2us1gs6r"
       REACT_APP_BACKEND_URL: "http://localhost:5000/"
     build: ./frontend-tailz
     ports:

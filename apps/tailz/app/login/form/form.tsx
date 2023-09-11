@@ -1,3 +1,4 @@
+"use client"
 import React from "react";
 import { UserData } from "../page";
 
@@ -14,10 +15,10 @@ const isEmail = (input: string) => {
   return emailRegex.test(input);
 };
 
-const isUsername = (input: string) => {
-  const usernameRegex = /^[a-zA-Z0-9_]{3,}$/;
-  return usernameRegex.test(input);
-};
+// const isUsername = (input: string) => {
+//   const usernameRegex = /^[a-zA-Z0-9_]{3,}$/;
+//   return usernameRegex.test(input);
+// };
 
 const SignInForm: React.FC<SignInProps> = ({
   userData,
@@ -25,29 +26,35 @@ const SignInForm: React.FC<SignInProps> = ({
   handleChange,
 }) => {
   
+  const [showPassword, setShowPassword] = React.useState(false);
+  const togglePasswordVisibility = () => {
+    setShowPassword(!showPassword);
+  };
+
+
   const handleInput = (e: any) => {
-    if (isEmail(e.target.value)) {
-      handleChange(userData.email, e.target.value);
-    } else if (isUsername(e.target.value)) {
-      handleChange(userData.username, e.target.value);
-    }
+    isEmail(e.target.value)
+      ? handleChange("email", e.target.value)
+      : handleChange("username", e.target.value);
   };
 
   return (
-    <form>
+    <form onSubmit={(e) => onSubmit(e)}>
       <input
         placeholder="Username or Email"
         type="text"
-        onChange={handleInput}
+        onChange={(e) => handleInput(e)}
       />
       <input
         placeholder="Password"
-        type="password"
-        onChange={handleChange}
-        value={userData.password}
+        type={showPassword ? "text" : "password"}
+        onChange={(e) => handleInput(e)}
       />
+      <button onClick={togglePasswordVisibility} type="button">
+        {showPassword ? "Hide Password" : "Show Password"}
+      </button>
 
-      <button onClick={onSubmit}>Sign in</button>
+      <button type="submit">Sign in</button>
     </form>
   );
 };
