@@ -38,6 +38,9 @@ const SignInForm: React.FC<SignInProps> = ({
       : handleChange("username", e.target.value);
   };
 
+
+  
+
   return (
     <form onSubmit={(e) => onSubmit(e)}>
       <input
@@ -48,7 +51,7 @@ const SignInForm: React.FC<SignInProps> = ({
       <input
         placeholder="Password"
         type={showPassword ? "text" : "password"}
-        onChange={(e) => handleInput(e)}
+        onChange={(e) => handleChange("password", e.target.value)}
       />
       <button onClick={togglePasswordVisibility} type="button">
         {showPassword ? "Hide Password" : "Show Password"}

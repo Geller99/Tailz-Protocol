@@ -3,9 +3,9 @@ import React from "react";
 import SignInForm from "./form/form";
 import FederatedSignin from "./federated/federated";
 import Link from "next/link";
-// import { Auth } from "aws-amplify";
 import { useRouter } from "next/navigation";
-import useAuthStore from "../../store/user/user";
+import useAuthStore from "../../store/auth/user";
+import { Auth } from "aws-amplify";
 
 /**
  * @login
@@ -15,55 +15,52 @@ import useAuthStore from "../../store/user/user";
  */
 
 export type UserData = {
-  username: string;
+  username?: string;
   password: string;
-  email: string;
+  email?: string;
 };
 
 const SignIn = () => {
   const [errors, setErrors] = React.useState<string>("");
-  const isAuthenticated = useAuthStore((state) => state.isAuthenticated);
-  const myRouter = useRouter();
+  const router = useRouter();
 
-  //TODO -> adjust input for phone or username
   const [userData, setUserData] = React.useState<UserData>({
     username: "",
     password: "",
     email: "",
   });
 
+  const { login } = useAuthStore(state => ({ login: state.login }));
+
   const handleChange = (field: string, value: any) => {
-    console.log(`Field: ${field}, Value: ${value}`);
+    // console.log(`Field: ${field}, Value: ${value}`);
     setUserData((prevData: any) => ({
       ...prevData,
       [field]: value,
     }));
   };
 
-  // TODO -> Setup amplify sign-in flow
-  //   const onSubmit = async (event) => {
-  //     setErrors("");
-  //     event.preventDefault();
-  //     Auth.signIn(userData.email, userData.password)
-  //       .then((user) => {
-  //         console.log("user", user);
-  //         //   localStorage.setItem("access_token", user.signInUserSession.accessToken.jwtToken)
-  //         window.location.href = "/";
-  //       })
-  //       .catch((error) => {
-  //         if (error.code == "UserNotConfirmedException") {
-  //           window.location.href = "/confirm";
-  //         }
-  //         setErrors(error.message);
-  //       });
-  //     return false;
-  //   };
+  
+  const onSubmit = async (event) => {
+      setErrors("");
+      event.preventDefault();
 
-  const onSubmit = (e: any) => {
-    e.preventDefault();
-    myRouter.push("/feed");
-    return null;
-  };
+      try {
+        await Auth.signIn(userData.email, userData.password)
+        .then((user) => {
+          console.log("user signed in", user);
+          login({username: user.attributes.preferred_username, email: user.attributes.email});
+          localStorage.setItem("access_token", user.signInUserSession.accessToken.jwtToken)
+        })        
+        alert("Welcome to Tailz!")
+        router.push('/feed');
+        
+      } catch (err) {
+        console.error(err);
+        setErrors(err.message);
+      }
+      return false;
+    };
 
   return (
     <div>

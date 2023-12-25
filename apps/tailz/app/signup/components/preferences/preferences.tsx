@@ -1,6 +1,6 @@
 
 
-import React from 'react';
+import React, { useEffect } from 'react';
 
 interface PreferencesStepProps {
   userData: any;
@@ -11,12 +11,13 @@ interface PreferencesStepProps {
 
 const Preferences: React.FC<PreferencesStepProps> = ({ userData, handleChange, nextStep, prevStep }) => {
   const [isChecked, setIsChecked] = React.useState(false);
-
+  
   const handleCheckboxChange = () => {
-    setIsChecked(!isChecked);
-    handleChange('dob', isChecked);
+    const newCheckedValue = !isChecked;  // store new value to avoid async bug
+    setIsChecked(newCheckedValue); // this is async
+    handleChange('analyticsConsent', newCheckedValue); // Pass the new value
   };
- 
+  
   return (
     <div>
       <h2>Step 2: Preferences </h2>

@@ -1,11 +1,11 @@
 "use client";
-import React from "react";
+import React, { useEffect } from "react";
 import { UserProps } from "../../page";
 import {
   validateEmail,
   validatePassword,
   validateUsername,
-} from "../../services/validators";
+} from "../../../../services/validators";
 import useFormStore, { SetFormErrors } from "../../services/formStore";
 
 /**
@@ -91,11 +91,13 @@ const PersonalInfoStep: React.FC<PersonalInfoStepProps> = ({
 
   return (
     <div>
+      
       {step && step === 3 ? (
         <h2> Step {step}: You're all set! </h2>
       ) : (
         <h2> Step {step}: Personal Information </h2>
       )}
+
       <input
         type="text"
         placeholder="username"
@@ -116,6 +118,8 @@ const PersonalInfoStep: React.FC<PersonalInfoStepProps> = ({
       {formErrors.dobErrors && (
         <div style={{ color: "red" }}>{formErrors.dobErrors}</div>
       )}
+
+      
       <input
         type={showPassword ? "text" : "password"}
         value={userData.password}
@@ -138,9 +142,10 @@ const PersonalInfoStep: React.FC<PersonalInfoStepProps> = ({
       {formErrors.emailErrors && (
         <div style={{ color: "red" }}>{formErrors.emailErrors}</div>
       )}
-      <button onClick={nextStep}>Next</button>
-      <button onClick={prevStep}>Back</button>
-
+      
+     
+      {step !== 1 ? <button onClick={prevStep}>Back</button> : <></>}
+      {step !== 3 ? <button onClick={nextStep}>Next</button> : <></>}
       {step === 3 ? <button type="submit"> Submit </button> : <></>}
     </div>
   );

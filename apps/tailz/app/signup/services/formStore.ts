@@ -13,6 +13,7 @@ interface FormState {
 }
 
 const useFormStore = create<FormState>()((set) => ({
+
   userData: {
     username: "",
     dob: "",
@@ -24,8 +25,8 @@ const useFormStore = create<FormState>()((set) => ({
   setUserData: (field: string, value: string) => {
     console.log(`Field: ${field}, Value: ${value}`);
     set((state) => ({
-      formErrors: {
-        ...state.formErrors,
+      userData: {
+        ...state.userData,
         [field]: value,
       },
     }));

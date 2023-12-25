@@ -1,45 +1,56 @@
-// import { Auth } from "aws-amplify";
+
 "use client"
 import React from "react";
-import useAuthStore from "../../store/user/user";
+import { Auth } from "aws-amplify";
+import useAuthStore from "../../store/auth/user";
 import { useRouter } from "next/navigation";
+import HomeFeed from "./home/home";
 
-const HomeFeed = () => {
 
-  const isAuthenticated = useAuthStore((state) => state.isAuthenticated);
+const Feed = () => {
+  const { isAuthenticated } = useAuthStore();
+  const { login } = useAuthStore(state => ({ login: state.login }));
+   
   const myRouter = useRouter();
-  const [user, setUser] = React.useState(null);
 
-  // check if we are authenicated
-  // const checkAuth = async () => {
-  //   Auth.currentAuthenticatedUser({
-  //     // Optional, By default is false.
-  //     // If set to true, this call will send a
-  //     // request to Cognito to get the latest user data
-  //     bypassCache: false,
-  //   })
-  //     .then((user) => {
-  //       console.log("user", user);
-  //       return Auth.currentAuthenticatedUser();
-  //     })
-  //     .then((cognito_user) => {
-  //       setUser({
-  //         display_name: cognito_user.attributes.name,
-  //         handle: cognito_user.attributes.preferred_username,
-  //       });
-  //     })
-  //     .catch((err) => console.log(err));
-  // };
+  // load user feed 
+  const loadData = async () => { 
+
+    return ""
+  }
+
+  /**
+   * check if user is authenticated
+   * update user instance in context api
+   * validate page via isAuthenticated prop
+   */
+  const checkAuth = async () => {
+    Auth.currentAuthenticatedUser({
+      bypassCache: false,
+    })
+      .then((user) => {
+        console.log("check Auth", user);
+        return Auth.currentAuthenticatedUser();
+      })
+      .then((cognito_user) => {
+        console.log("Authed User", cognito_user);
+        login({
+          username: cognito_user.attributes.username,
+          dob: cognito_user.attributes.birthdate,
+        });
+      })
+      .catch((err) => console.log("Cognito Error", err));
+  };
 
   // check when the page loads if we are authenicated
   React.useEffect(() => {
     //   loadData();
-    // checkAuth();
+    checkAuth();
     console.log("Auth Status", isAuthenticated);
   }, []);
 
   if (isAuthenticated) {
-    return <div> Welcome to Tailz! </div>;
+    return <HomeFeed/>
   } else {
     return (
       <div>
@@ -51,4 +62,4 @@ const HomeFeed = () => {
 
 };
 
-export default HomeFeed;
+export default Feed;

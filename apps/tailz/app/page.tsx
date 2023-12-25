@@ -7,7 +7,9 @@ import amplifyConfig from "../services/amplify";
 const Home = () => {
   const [user, setUser] = React.useState(null);
 
-  // Amplify.configure(amplifyConfig);
+  console.log('Amplify Configuration:', amplifyConfig);
+
+  Amplify.configure(amplifyConfig);
 
   return (
     <div>

@@ -39,7 +39,7 @@ const SignupForm: React.FC<SignupProps> = ({
   };
 
   const handleChange = (field: string, value: any) => {
-    console.log(`Field: ${field}, Value: ${value}`);
+    console.log("Handle Change Log ", `Field: ${field}, Value: ${value}`);
     setUserData((prevData: UserProps) => ({
       ...prevData,
       [field]: value,
@@ -96,7 +96,7 @@ const SignupForm: React.FC<SignupProps> = ({
     }
   };
 
-  return <form onSubmit={validateFormSubmit}>{renderStep()}</form>;
+  return <form onSubmit={(e) => {validateFormSubmit(e)}}>{renderStep()}</form>;
 };
 
 export default SignupForm;
