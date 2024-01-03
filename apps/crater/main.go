@@ -5,7 +5,7 @@ import (
 	"github.com/joho/godotenv"
 	"net/http"
 	"os"
-	"tailzprotocol/routes"
+	
 )
 
 func home(res http.ResponseWriter, req *http.Request) {
@@ -27,7 +27,7 @@ func main() {
 
 	// routes
 	mux.HandleFunc("/", home)
-	mux.HandleFunc("/api/auth", routes.AuthHandler)
+	// mux.HandleFunc("/api/auth", routes.AuthHandler)
 	
 	PORT, exists := os.LookupEnv("PORT")
 	if exists {

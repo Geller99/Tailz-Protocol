@@ -1,47 +1,88 @@
-CREATE TABLE "Users" (
-  "user_id" SERIAL PRIMARY KEY,
-  "username" VARCHAR(50) UNIQUE NOT NULL,
-  "email" VARCHAR(100) UNIQUE NOT NULL,
-  "password_hash" VARCHAR(100) NOT NULL,
-  "follower_count" INT,
-  "follow_count" INT,
-  "profile_picture" VARCHAR(200),
-  "bio" TEXT,
-  "join_date" TIMESTAMP DEFAULT (CURRENT_TIMESTAMP),
-  "last_login" TIMESTAMP
+CREATE TABLE Users (
+    user_id SERIAL PRIMARY KEY,
+    username VARCHAR(255) NOT NULL,
+    email VARCHAR(255) NOT NULL,
+    password_hash TEXT NOT NULL,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP,
+    followers INTEGER DEFAULT 0,
+    following INTEGER DEFAULT 0,
+    profile_picture_url TEXT,
+    bio TEXT,
+    location TEXT,
+    website_url TEXT,
+    birth_date DATE,
+    account_status VARCHAR(50) DEFAULT 'active',
+    is_private BOOLEAN DEFAULT FALSE,
+    is_verified BOOLEAN DEFAULT FALSE,
+    last_login TIMESTAMP,
+    login_attempts INTEGER DEFAULT 0
 );
 
-CREATE TABLE "Wagz" (
-  "wag_id" SERIAL PRIMARY KEY,
-  "user_id" INT,
-  "rewagz_count" INT DEFAULT 0,
-  "likes" INT DEFAULT 0,
-  "content" TEXT NOT NULL,
-  "timestamp" TIMESTAMP DEFAULT (CURRENT_TIMESTAMP)
+
+CREATE TABLE Wags (
+    wag_id SERIAL PRIMARY KEY,
+    user_id INTEGER REFERENCES Users(user_id),
+    content TEXT NOT NULL,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP,
+    is_pinned BOOLEAN DEFAULT FALSE,
+    media_url TEXT,
+    in_reply_to_wag_id INTEGER,
+    is_edited BOOLEAN DEFAULT FALSE,
+    visibility VARCHAR(50) DEFAULT 'public'
 );
 
-CREATE TABLE "ReWagz" (
-  "rewagz_id" SERIAL PRIMARY KEY,
-  "user_id" INT,
-  "owner_wag_id" INT,
-  "timestamp" TIMESTAMP DEFAULT (CURRENT_TIMESTAMP)
+CREATE TABLE Likes (
+    like_id SERIAL PRIMARY KEY,
+    user_id INTEGER REFERENCES Users(user_id),
+    wag_id INTEGER REFERENCES Wags(wag_id),
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
-CREATE TABLE "DirectMessages" (
-  "message_id" SERIAL PRIMARY KEY,
-  "sender_id" VARCHAR(50),
-  "recipient_id" VARCHAR(50),
-  "content" TEXT,
-  "timestamp" TIMESTAMP DEFAULT (CURRENT_TIMESTAMP),
-  "is_read" BOOLEAN DEFAULT false
+
+CREATE TABLE Echoes (
+    echo_id SERIAL PRIMARY KEY,
+    user_id INTEGER REFERENCES Users(user_id),
+    wag_id INTEGER REFERENCES Wags(wag_id),
+    counter INTEGER DEFAULT 0,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
--- ALTER TABLE "Wagz" ADD FOREIGN KEY ("user_id") REFERENCES "Users" ("user_id");
+CREATE TABLE Notifications (
+    notification_id SERIAL PRIMARY KEY,
+    user_id INTEGER REFERENCES Users(user_id),
+    type VARCHAR(255),
+    originator_id INTEGER REFERENCES Users(user_id),
+    wag_id INTEGER REFERENCES Wags(wag_id),
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    read_status BOOLEAN DEFAULT FALSE
+);
 
--- ALTER TABLE "ReWagz" ADD FOREIGN KEY ("user_id") REFERENCES "Users" ("user_id");
 
--- ALTER TABLE "ReWagz" ADD FOREIGN KEY ("owner_wag_id") REFERENCES "Wagz" ("wag_id");
+CREATE TABLE User_Settings (
+    user_id INTEGER PRIMARY KEY REFERENCES Users(user_id),
+    privacy_setting VARCHAR(50) DEFAULT 'public',
+    email_notifications_enabled BOOLEAN DEFAULT TRUE,
+    push_notifications_enabled BOOLEAN DEFAULT TRUE,
+    dark_mode_enabled BOOLEAN DEFAULT FALSE,
+    language_preference VARCHAR(50) DEFAULT 'en',
+    additional_preferences JSON
+);
 
--- ALTER TABLE "DirectMessages" ADD FOREIGN KEY ("sender_id") REFERENCES "Users" ("user_id");
 
--- ALTER TABLE "DirectMessages" ADD FOREIGN KEY ("recipient_id") REFERENCES "Users" ("user_id");
+CREATE TABLE Direct_Messages (
+    message_id SERIAL PRIMARY KEY,
+    sender_id INTEGER REFERENCES Users(user_id),
+    receiver_id INTEGER REFERENCES Users(user_id),
+    content TEXT NOT NULL,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+
+CREATE TABLE Follows (
+    follower_id INTEGER REFERENCES Users(user_id),
+    following_id INTEGER REFERENCES Users(user_id),
+    followed_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    PRIMARY KEY (follower_id, following_id)
+);
